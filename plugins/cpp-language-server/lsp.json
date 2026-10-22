@@ -2,11 +2,13 @@
   "lspServers": {
     "cpp": {
       "command": "npx",
+      "powershell": "& $env:MSCPPLS_PLUGIN_LAUNCHER",
       "args": [
         "@microsoft/cpp-language-server"
       ],
       "env": {
-        "MSCPPLS_PLUGIN_SOURCE": "public"
+        "MSCPPLS_PLUGIN_SOURCE": "public",
+        "MSCPPLS_PLUGIN_LAUNCHER": "${PLUGIN_ROOT}/scripts/start-lsp.ps1"
       },
       "fileExtensions": {
         ".cpp": "cpp",
@@ -18,6 +20,7 @@
         ".hh": "cpp",
         ".h": "cpp"
       },
+      "initializationTimeoutMs": 1000000,
       "requestTimeoutMs": 1000000
     }
   }
