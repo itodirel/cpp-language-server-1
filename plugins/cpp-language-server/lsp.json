@@ -5,6 +5,7 @@
       "args": [
         "@microsoft/cpp-language-server"
       ],
+      "cwd": "${COPILOT_SESSION_CWD}",
       "env": {
         "MSCPPLS_PLUGIN_SOURCE": "public"
       },

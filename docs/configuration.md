@@ -25,9 +25,23 @@ If you install the package globally, npm adds the `mscppls` executable to your `
 
 See the [command line reference](./command-line-options.md) for available flags.
 
+## Startup working directory
+
+The plugin sets its LSP launch directory to `${COPILOT_SESSION_CWD}`, which requires a Copilot CLI build that supplies the session working directory during server launch. It does not substitute the Git root or plugin installation directory.
+
+With an MSCPPLS build that supports `MSCPPLS_WORKING_DIRECTORY`, set it before starting Copilot CLI to override the server's inherited working directory:
+
+```powershell
+$env:MSCPPLS_WORKING_DIRECTORY = 'C:\repo\apps\demo'
+```
+
+Only an existing directory that the server can enter takes effect. Unset, empty, nonexistent, or file-valued settings leave the CLI-selected directory unchanged. Relative values resolve against that directory. Restart the server after changing the variable.
+
+Explicit `--workspace-config` and `auto_configure_directory` settings retain their existing precedence. The variable does not change the client workspace used for indexing or enable automatic MSBuild extraction.
+
 ## Minimal configuration (automatic discovery)
 
-If you omit the `--lsp-config` argument (or pass `--allow-missing-lsp-config`), the language server automatically searches each workspace folder for a single `compile_commands.json` and infers the repository root from the workspace folder. In this mode you don't need a `cpp-lsp.json` file or a `repositoryPath`:
+If you omit the `--lsp-config` argument (or pass `--allow-missing-lsp-config`), the language server automatically searches its startup working-directory cone for a single `compile_commands.json`. The client workspace still determines the indexing scope. In this mode you don't need a `cpp-lsp.json` file or a `repositoryPath`:
 
 ```json
 {
@@ -35,6 +49,7 @@ If you omit the `--lsp-config` argument (or pass `--allow-missing-lsp-config`), 
     "cpp": {
       "command": "mscppls",
       "args": [],
+      "cwd": "${COPILOT_SESSION_CWD}",
       "fileExtensions": {
         ".cpp": "cpp",
         ".c": "cpp",
